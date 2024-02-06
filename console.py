@@ -1,279 +1,146 @@
-#!/usr/bin/python
-"""
-Module for console
-"""
+#!/usr/bin/python3
 import cmd
-import re
 import shlex
-import ast
-from models import storage
+import json
 from models.base_model import BaseModel
 from models.user import User
 from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.state import State
 from models.city import City
+from models.review import Review
+from models.place import Place
+from models import storage
+from models.state import State
+from datetime import date time
+from models.engine.file_storage import FileStorage
 
-
-def split_curly_braces(e_arg):
-    """
-    Splits the curly braces for the update method
-    """
-    curly_braces = re.search(r"\{(.*?)\}", e_arg)
-
-    if curly_braces:
-        id_with_comma = shlex.split(e_arg[:curly_braces.span()[0]])
-        id = id_with_comma[0].strip(",")
-
-        str_data = curly_braces.group(1)
-        try:
-            arg_dict = ast.literal_eval("{" + str_data + "}")
-        except Exception:
-            print("** invalid dictionary format **")
-            return
-        return id, arg_dict
-    else:
-        commands = e_arg.split(",")
-        if commands:
-            try:
-                id = commands[0].strip()
-            except IndexError:
-                return "", ""
-            try:
-                attr_name = commands[1].strip()
-            except IndexError:
-                return id, ""
-            try:
-                attr_value = commands[2].strip()
-            except IndexError:
-                return id, attr_name
-            return f"{id}", f"{attr_name} {attr_value}"
-
+"""
+program called console.py that contains the entry point of the command
+interpreter.
+"""
 
 class HBNBCommand(cmd.Cmd):
-    """
-    HBNBCommand console class
-    """
-    prompt = "(hbnb) "
-    valid_classes = ["BaseModel", "User", "Amenity",
-                     "Place", "Review", "State", "City"]
+    ''' a command interpreter class '''
+    prompt = "(hbnb)"
+
+    All_class_dict = {
+            "BaseModel": BaseModel,
+            "User": User,
+            "Place": Place,
+            "State": State,
+            "City": City,
+            "Amenity": Amenity,
+            "Review": Review
+    }
+
+    def do_EOF(self, arg):
+        """
+        EOF (ctrl+D) signal to exit the program.
+
+        """
+        print ("")
+        return True
+
+    def do_quit(self, arg):
+        ''' Quit command to exit the program '''
+        return True
+
+    def do_nothing(self, arg):
+        ''' does nothing '''
+        pass
 
     def emptyline(self):
         """
         Do nothing when an empty line is entered.
+
         """
         pass
 
-    def do_EOF(self, arg):
-        """
-        EOF (Ctrl+D) signal to exit the program.
-        """
-        return True
-
-    def do_quit(self, arg):
-        """
-        Quit command to exit the program.
-        """
-        return True
-
     def do_create(self, arg):
-        """
-        Create a new instance of BaseModel and save it to the JSON file.
-        Usage: create <class_name>
-        """
-        commands = shlex.split(arg)
-
-        if not commands:
+        ''' Creates a new instance BaseModel, saves prints its id '''
+        if args == '':
             print("** class name missing **")
-        elif commands[0] not in self.valid_classes:
+            return
+        arg = shlex.split(args)
+        if arg[0] not in HBNBCommand.All_class_dict:
             print("** class doesn't exist **")
-        else:
-            new_instance = eval(f"{commands[0]}()")
-            storage.save()
-            print(new_instance.id)
+            return
+        new = HBNBCommand.All_class_dict[arg[0]]()
+        new.save()
+        print(new.id)
 
-    def do_show(self, arg):
-        """
-        Show the string representation of an instance.
-        Usage: show <class_name> <id>
-        """
-        commands = shlex.split(arg)
+        def do_show(self, arg):
+            """ 
+            show the string representation of an instance.
+            Usage: show <class_name> <id>
+            """
+            commands = shlex.split(arg)
 
-        if not commands:
-            print("** class name missing **")
-        elif commands[0] not in self.valid_classes:
-            print("** class doesn't exist **")
-        elif len(commands) < 2:
-            print("** instance id missing **")
-        else:
-            objects = storage.all()
-
-            key = "{}.{}".format(commands[0], commands[1])
-            if key in objects:
-                print(objects[key])
+            if len(commands) == 0:
+                print("** class name missing **")
+            elif commands[0] not in self.valid_classes:
+                print("** class doesn,t exist **")
+            elif len(commands) < 2:
+                print("** instance id missing **")
             else:
-                print("** no instance found **")
+                objects = storage.all()
 
-    def do_destroy(self, arg):
-        """
-        Delete an instance based on the class name and id.
-        Usage: destroy <class_name> <id>
-        """
-        commands = shlex.split(arg)
+                key = "{}.{}".format(commands[0], commands[1])
+                if key in objects:
+                    print(objects[key])
+                else:
+                    print("** no instance found **")
 
-        if not commands:
-            print("** class name missing **")
-        elif commands[0] not in self.valid_classes:
-            print("** class doesn't exist **")
-        elif len(commands) < 2:
-            print("** instance id missing **")
-        else:
-            objects = storage.all()
-            key = "{}.{}".format(commands[0], commands[1])
-            if key in objects:
-                del objects[key]
+        def do_destroy(self, args):
+            '''Deletes an instance based on the class name and id.
+            Usage: destroy <class_name> <id>'''
+
+            arg = shlex.split(args)
+            if len(arg) == 0:
+                print("** class name missing **")
+                return
+            if arg[0] not in HBNBCommand.All_class_dict:
+                print("** class doesn't exist **")
+                return
+            if len(arg) < 2:
+                print("** instance id missing **")
+                return
+            storage.reload()
+            obj = storage.all()
+            obj_key in obj:
+            if obj_key in obj:
+                del obj[obj_key]
                 storage.save()
             else:
                 print("** no instance found **")
 
-    def do_all(self, arg):
-        """
-        Print the string representation of all instances or a specific class.
-        Usage: <User>.all()
-                <User>.show()
-        """
-        objects = storage.all()
-
-        commands = shlex.split(arg)
-
-        if not commands:
-            for key, value in objects.items():
-                print(str(value))
-        elif commands[0] not in self.valid_classes:
-            print("** class doesn't exist **")
-        else:
-            for key, value in objects.items():
-                if key.split('.')[0] == commands[0]:
-                    print(str(value))
-
-    def do_count(self, arg):
-        """
-        Counts and retrieves the number of instances of a class
-        usage: <class name>.count()
-        """
-        objects = storage.all()
-
-        commands = shlex.split(arg)
-
-        if arg:
-            cls_nm = commands[0]
-
-        count = 0
-
-        if commands:
-            if cls_nm in self.valid_classes:
-                for obj in objects.values():
-                    if obj.__class__.__name__ == cls_nm:
-                        count += 1
-                print(count)
+        def do_all(self, args):
+            ''' prints all string representation of all instances based or not
+            on the class name. Ex: $ all BaseModel or $ all '''
+            storage.reload()
+            json_dict = []
+            obj_dict = storage.all()
+            if args == '':
+                for key, value in obj_dict.items():
+                    json_dict.append(str(value)))
+                print(json.dumps(json_dict))
+                return
+            arg = shlex.split(args)
+            if arg[0] in HBNBCommand.All_class_dict.keys():
+                for key, value in obj_dict.items():
+                    if arg[0] in key:
+                        json_dict.append(str(value))
+                print(json.dumps(json_dict))
+                return
             else:
-                print("** invalid class name **")
-        else:
-            print("** class name missing **")
+                print("** class doesn't exist **")
 
-    def do_update(self, arg):
-        """
-        Update an instance by adding or updating an attribute.
-        Usage: update <class_name> <id> <attribute_name> "<attribute_value>"
-        """
-        commands = shlex.split(arg)
-
-        if not commands:
-            print("** class name missing **")
-        elif commands[0] not in self.valid_classes:
-            print("** class doesn't exist **")
-        elif len(commands) < 2:
-            print("** instance id missing **")
-        else:
+        def do_count(self, args):
+            ''' counts number of instances of a class
+            usage: <class name>.count()
+            '''
             objects = storage.all()
-
-            key = "{}.{}".format(commands[0], commands[1])
-            if key not in objects:
-                print("** no instance found **")
-            elif len(commands) < 3:
-                print("** attribute name missing **")
-            elif len(commands) < 4:
-                print("** value missing **")
-            else:
-                obj = objects[key]
-                curly_braces = re.search(r"\{(.*?)\}", arg)
-
-                if curly_braces:
-                    try:
-                        str_data = curly_braces.group(1)
-
-                        arg_dict = ast.literal_eval("{" + str_data + "}")
-
-                        for attr_name, attr_value in arg_dict.items():
-                            setattr(obj, attr_name, attr_value)
-                    except Exception:
-                        pass
-                else:
-                    attr_name = commands[2].strip()
-                    attr_value = commands[3].strip()
-
-                    try:
-                        attr_value = eval(attr_value)
-                    except Exception:
-                        pass
-                    setattr(obj, attr_name, attr_value)
-
-                obj.save()
-
-    def default(self, arg):
-        """
-        Default behavior for cmd module when input is invalid
-        """
-        arg_list = arg.split('.')
-
-        cls_nm = arg_list[0]  # incoming class name
-
-        command = arg_list[1].split('(')
-
-        cmd_met = command[0]  # incoming command method
-
-        e_arg = command[1].split(')')[0]  # extra arguments
-
-        method_dict = {
-            'all': self.do_all,
-            'show': self.do_show,
-            'destroy': self.do_destroy,
-            'update': self.do_show,
-            'count' : self.do_count
-        }
-
-        if cmd_met in method_dict.keys():
-            if cmd_met != "update":
-                return method_dict[cmd_met]("{} {}".format(cls_nm, e_arg))
-            else:
-                if not cls_nm:
-                    print("** clas name missing **")
-                    return
-                try:
-                    obj_id, arg_dict = split_curly_braces(e_arg)
-                except Exception:
-                    pass
-                try:
-                    call = method_dict[cmd_met]
-                    return call("{} {} {}".format(cls_nm, obj_id, arg_dict))
-                except Exception:
-                    pass
-                else:
-                    print("*** unknown syntax: {}".format(arg))
-                    return False
-
-
-
-if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+            cnt = 0
+            for key in obj:
+                if (args in key):
+                    cnt += 1
+            print(cnt)

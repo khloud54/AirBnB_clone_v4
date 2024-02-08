@@ -66,3 +66,7 @@ class FileStorage:
                 class_name, obj_id = key.split('.')
                 cls = class_map[class_name]
                 self._objects[key] = cls(**value)
+
+                FileStorage.__objects[key] = instance
+            except Exception:
+                pass

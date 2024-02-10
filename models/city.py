@@ -1,19 +1,15 @@
 #!/usr/bin/python3
 from models.base_model import BaseModel
 
+"""
+Module class city
+"""
+
 class City(BaseModel):
-    """
-
-    Represents a city.
-
-    Attributes:
-    state_id (str): The state ID.
-    name (str): The name of the city.
-
-    """
+    ''' class city definition '''
+    name = ""
+    state_id = ""
 
     def __init__(self, *args, **kwargs):
-        """Initializes City instance."""
-        super().__init__(*args, **kwargs)
-        state_id = ""
-        name = ""
+        """ constructor method """
+        super().__init__(self, *args, **kwargs)

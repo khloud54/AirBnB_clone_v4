@@ -4,9 +4,6 @@ from models.base_model import BaseModel
 class place(BaseModel):
     """Class representing a place"""
 
-    def __init__(self, *args, **kwargs):
-        """Initializes place"""
-        super().__init__(*args, **kwargs)
         name = ""
         city_id = ""
         user_id = ""
@@ -18,3 +15,7 @@ class place(BaseModel):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+        def __init__(self, *args, **kwargs):
+            """ constructor method """
+            super().__init__(self, *args, **kwargs)

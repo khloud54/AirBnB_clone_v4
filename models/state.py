@@ -6,15 +6,10 @@ from models.base_model import BaseModel
 
 class State(BaseModel):
     """
-    Represent a state.
-
-    Attributes:
-    name (str) : The name of the state.
-
+    definition for class State
     """
+    name =""
 
     def __init__(self, *args, **kwargs):
-        """Initializes State"""
-
-        super().__init__(*args, **kwargs)
-        name = ""
+        """ constructor method """
+        super().__init__(self, *args, **kwargs)

@@ -1,72 +1,69 @@
 #!/usr/bin/python3
+import os.path
 import os
 import json
-import models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
 
-class FileStorage:
+"""
+The module file_storage includes a class named FileStorage,
+which handles the serialization of instances to a JSON file
+and the deserialization ofJSON files back into instances.
+"""
+
+class FilelStorage():
     """
-
-    A class serializing instances to a JSON file and deserializing JSON file
-    to instances
-
+    This class is responsible for converting instances into
+    a JSON file and converting JSON files back into instances.
     """
-
-    def __init__(self):
-        """ Initializes FileStorage """
-        self._file_path = "file.json"
-        self._objects = {}
+    ''' initializing values '''
+    __file_path = "file.json"
+    __objects = {}
 
     def all(self):
-        """ Returns the directory containing all sorted objects """
-        return self._objects
+        ''' returns the dictionary __objects '''
+        return self.__objects
 
     def new(self, obj):
-        """ Sets the given object in the dictionary with
-        a key of <object class name>.id"""
-
+        ''' sets in __objects the obj with key <obj class name>,id '''
         if obj:
-            key = "{}.{}".format(type(obj).__name__, obj.id)
-            self._objects[key] = obj
+            ''' adds the object and the key to __objects id the obj exists '''
+            name = "{}.{}".format(obj.__class__.__name__, obj.id)
+            self.__objects[name] = obj
 
     def save(self):
-        """ serializes objects to JSON and saves to the specified file path """
-        serialized_objs = {}
+        ''' serializes __objects to the JSON file (path: __file_path) '''
+        my_dict = {}
 
-        for key, val in self._objects.items():
-            serialized_objs[key] = val.to_dict()
+        for keys, val in self.__objects.items():
+            ''' serializes each object using the key '''
+            my_dict[keys] = val.to_dict()
 
-        with open(self._file_path, "W") as file:
-            json.dump(serialized_objs, file)
+        with open(self.__file_path, "w") as my_file:
+            json.dump(my_dict, my_file)
 
     def reload(self):
-        """ Deserializes JSON file to objects """
-        class_map = {
-            "BaseModel" : BaseModel,
-            "User": User,
-            "State": State,
-            "City": City,
-            "Amenity": Amenity,
-            "Place": Place,
-            "Review": Review
-        }
+        ''' deserializes/loads the JSON file to __objects '''
 
-        if not os.path.isfile(self._file_path):
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+        my_dict = {
+                "BaseModel": BaseModel,
+                "User": User,
+                "State": State,
+                "City": City,
+                "Amenity": Amenity,
+                "Place": Place,
+                "Review": Review
+            }
+        if not os.path.isfile(self.__file_path):
             return
-
-        with open(self._file_path, "r") as file:
-            data = json.load(file)
-            self._objects = {}
-            for key, value in data.items():
-                class_name, obj_id = key.split('.')
-                cls = class_map[class_name]
-                self._objects[key] = cls(**value)
-
-                FileStorage.__objects[key] = instance
-            except Exception:
-                pass
+        with open(self.__file_path, "r") as file_path:
+            objects = json.load(file_path)
+            self.__objects = {}
+            for key in objects:
+                name = key.split(".")[0]
+                self.__objects[key] = my_dict[name](**objects[key])

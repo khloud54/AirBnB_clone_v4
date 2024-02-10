@@ -27,22 +27,22 @@ class TestFileStorage(unittest.TestClass):
 
     def test_Access(self):
         ''' test read-write acess permissions '''
-        read = os.access('models/engine/file_storage.py', os.R_Ok)
+        rd = os.access('models/engine/file_storage.py', os.R_Ok)
         self.assertTrue(read)
-        write = os.access('models/engine/file_storage.py', os.W_Ok)
+        wr = os.access('models/engine/file_storage.py', os.W_Ok)
         self.assertTrue(write)
-        execute = os.access('models/engine/file_storage.py', os.X_Ok)
-        self.assertFalse(execute)
+        ex = os.access('models/engine/file_storage.py', os.X_Ok)
+        self.assertFalse(ex)
 
     def test_new(self):
         """
-        Tests method: new (saves new object into dictionary)
+        Test the new method, which stores a new object in a dictionary
         """
        m_storage = FileStorage()
        instances_dic = m_storage.all()
        Aman = User()
        Aman.id = 999999
-       Aman.name = "Amab"
+       Aman.name = "Aman"
        m_storage.new(Aman)
        key = Aman.__class__.name__ + "." + str(Aman.id)
        self.assertIsNotNone(instances_dic[key])
@@ -54,14 +54,14 @@ class TestFileStorage(unittest.TestClass):
         a_storage = FileStorage()
         try:
             os.remove("file.json")
-        except FileNotFoundError:
+        except:
             pass
         with open("file.json", "w") as f:
             f.write("{}")
         with open("file.json", "r") as r:
-            content = r.read() # Read the whole file content
-            self.assertEqual(content, "{}")
-        self.assertIsNone(a_storage.reload())
+            for line in r:
+                self.assertEqual(line, "{}")
+            self.assertIs(a_storage.reload(), None)
 
     def test_funcdocs(self):
         ''' functions docstring testing '''
@@ -70,17 +70,18 @@ class TestFileStorage(unittest.TestClass):
 
     def test_save(self):
         ''' method of test save '''
-        storage = FileStorage()
+        obj = FileStorage()
         new_obj = BaseModel()
-        storage.new(new_obj)
-        dict_a = storage.all()
-        storage.save()
-        storage.reload()
-        dict_b = storage.all()
-        key_a = next(iter(dict_a))
-        key_b = next(iter(dict_b))
-        self.assertEqual(dict_a[key_a].to_dict(), dict_b[key_b].to_dict())
+        obj.new(new_obj)
+        dict1 = obj.all()
+        obj.save()
+        obj.reload()
+        dict2 = obj.all()
+        for key in dict1:
+            key1 = key
+        for key in dict2:
+            key2 = key
+        self.assertEqual(dict1[key].to_dict(), dict2[key2].to_dict())
 
-    if __name__ == '__main__':
-        unittest.main()
-
+if __name__ == '__main__':
+    unittest.main()

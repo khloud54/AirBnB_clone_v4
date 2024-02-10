@@ -11,12 +11,6 @@ class TestUser(unittest.TestCase):
     Review class Unittest
     """
 
-    def testsave(self):
-        ''' testing method: save '''
-        self.review = Review()
-        self.review.save()
-        self.assertTrue(hasattr(self.review, "updated_at"))
-
     def test_object_Instantiation(self):
         """
         instantiates class
@@ -34,6 +28,12 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.review.text, "")
         self.assertEqual(self.review.__class__.__name__, "Review")
 
+    def testsave(self):
+        ''' testing method: save '''
+        self.review = Review()
+        self.review.save()
+        self.assertTrue(hasattr(self.review, "updated_at"))
+
     def teststr(self):
         ''' testing __str__ return format of BaseMode '''
         self.review = Review()
@@ -41,5 +41,5 @@ class TestUser(unittest.TestCase):
                                   str(self.review.id), self.review.__dict__)
         self.assertEqual(print(s), print(self.review))
 
-    if __name__ == '__main__':
+if __name__ == '__main__':
         unittest.main()

@@ -26,11 +26,11 @@ class TestUser(unittest.TestCase):
         except FileNotFoundError:
             pass
 
-     def test_checking_for_functions(self):
-         self.assertIsNotNone(user.__doc__)
-
     def test_is_subclass(self):
         self.assertTrue(issubclass(self.my_user.__class__, BaseModel), True)
+
+     def test_checking_for_functions(self):
+         self.assertIsNotNone(user.__doc__)
 
     def test_has_attributes(self):
         self.assertTrue('email' in self.my_user.__dict__)
@@ -41,15 +41,15 @@ class TestUser(unittest.TestCase):
         self.assertTrue('first_name' in self.my_user.__dict__)
         self.assertTrue('last_name' in self.my_user.__dict__)
 
-    def test_save(self):
-        self.my_user.save()
-        self.assertNotEqual(self.my_user.created_at, self.my_user.updated_at)
-
     def test_attributes_are_strings(self):
         self.assertEqual(type(self.my_user.email), str)
         self.assertEqual(type(self.my_user.password), str)
         self.assertEqual(type(self.my_user.first_name), str)
         self.assertEqual(type(self.my_user.last_name), str)
+
+    def test_save(self):
+        self.my_user.save()
+        self.assertNotEqual(self.my_user.created_at, self.my_user.updated_at
 
     def test_to_dict(self):
         self.assertEqual('to_dict' in dir(self.my_user), True)

@@ -7,17 +7,9 @@ import models.place import Place
 class TestUser(unittest.TestCase):
     ''' Unittest for place class '''
 
-    def test_object_instantiation(self):
+    def test_object_Instantiation(self):
         ''' instantiates class '''
         self.place = Place()
-
-    def teststr(self):
-        '''
-        testing __str__ return format of BaseMModel
-        '''
-        self.place = Place()
-        s = "[{}] ({}) {}".format(self.place.__class__.__name__,
-                                  str(self.place.id), self. place.__dict__)
 
     def testattr(self):
             ''' test Class: Place attributes '''
@@ -45,5 +37,14 @@ class TestUser(unittest.TestCase):
             self.place.save()
             self.assertTrue(hasattr(self.place, "updated_at"))
 
-    if __name__ == '__main__':
+    def teststr(self):
+        '''
+        testing __str__ return format of BaseMModel
+        '''
+        self.place = Place()
+        s = "[{}] ({}) {}".format(self.place.__class__.__name__,
+                                  str(self.place.id), self. place.__dict__)
+
+
+if __name__ == '__main__':
         unittest.main()

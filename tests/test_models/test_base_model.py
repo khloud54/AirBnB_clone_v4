@@ -13,6 +13,11 @@ class TestUser(unittest.TestCase):
         ''' Creates an instance of the class '''
         self.basemodel = BaseModel()
 
+    def test_checking_for_functions(self):
+        self.assertIsNotNone(BaseModel.__doc__)
+        self.assertIsNotNone(BaseModel.save.__doc__)
+        self.assertIsNotNone(BaseModel.to_dict.__doc__)
+
     def testattr(self):
         ''' Test the attributes of the User class '''
         self.basemodel = BaseModel()
@@ -31,18 +36,6 @@ class TestUser(unittest.TestCase):
         self.assertFalse(hasattr(sel.basemodel, "age"))
         self.assertEqual(self.basemodel.__class__.__name__, "BaseModel")
 
-    def test_checking_for_functions(self):
-        self.assertIsNotNone(BaseModel.__doc__)
-        self.assertIsNotNone(BaseModel.save.__doc__)
-        self.assertIsNotNone(BaseModel.to_dict.__doc__)
-
-    def test_to_dict(self):
-        base1 = BaseModel()
-        base1_dict = base1.to_dict()
-        self.assertEqual(base1.__class__.__name__, 'BaseModel')
-        self.assertIsInstance(base1_dict['created_at'], str)
-        self.assertIsInstance(base1_dict['updated_at'],str)
-
     def testsave(self):
         ''' save testing method '''
         self.basemodel = BaseModel()
@@ -57,6 +50,13 @@ class TestUser(unittest.TestCase):
                                   self.basemodel.__dict__)
         self.assertEqual(print(s), print(self.basemodel))
 
+    def test_to_dict(self):
+        base1 = BaseModel()
+        base1_dict = base1.to_dict()
+        self.assertEqual(base1.__class__.__name__, 'BaseModel')
+        self.assertIsInstance(base1_dict['created_at'], str)
+        self.assertIsInstance(base1_dict['updated_at'],str)
 
-    if __name__ == '__main__':
+
+if __name__ == '__main__':
         unittest.main()

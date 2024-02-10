@@ -40,7 +40,7 @@ class TestConsole(unittest.TestCase):
 
     """Test command interpreter outputs"""
     def test_emptyline(self):
-        """Test no user input"""
+        """Test without any user input"""
         with patch('sys.stdout' , new=StringIO()) as fake_output:
             HBNBCommand().onecmd("\n")
             self.assertEqual(fake_output.getvalue(), '')
@@ -69,7 +69,7 @@ class TestConsole(unittest.TestCase):
             self.assertTrue(v.getvalue() == "** class name missing **\n")
 
     def test_class_exist(self):
-        ''' gtest class name exist '''
+        ''' test class name exist '''
         with patch('sys.stdout' , new=StringIO()) as v:
             HBNBCommand().onecmd('create BaseModel')
         with patch('sys.stdout' , new=StringIO()) as v:
@@ -77,7 +77,7 @@ class TestConsole(unittest.TestCase):
             self.assertTrue(v.getvalue() == "** class doesn't exist **\n")
 
     def test_all(self):
-        ''' test all method '''
+        ''' test all the method '''
         with patch('sys.stdout' , new=StringIO()) as v:
             HBNBCommand().onecmd('create BaseModel')
         with patch('sys.stdout' , new=StringIO()) as v:
@@ -85,7 +85,7 @@ class TestConsole(unittest.TestCase):
             self.assertTrue(len(v.getvalue()) > 0)
 
     def test_update(self):
-        ''' test update method '''
+        ''' test the update method '''
         with patch('sys.stdout' , new=StringIO()) as v:
             HBNBCommand().onecmd('create BaseModel')
         with patch('sys.stdout' , new=StringIO()) as v:
@@ -111,7 +111,7 @@ class TestConsole(unittest.TestCase):
             self.assertTrue(int(v.getvalue()) >= 1)
 
     def test_user(self):
-        ''' test user object with console '''
+        ''' Test the user object using the console. '''
         with patch('sys.stdout', new=StringIO()) as v:
             HBNBCommand().onecmd('create User')
             user_id = v.getvalue()
@@ -129,7 +129,7 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("destroy user" + user_id)
         with patch('sys.stdout', new=StringIO()) as v:
             HBNBCommand().onecmd("show User" + user_id)
-            self.assertTrue(v.getvalue() != "** no instance found **\n")
+            self.assertEqual(v.getvalue() != "** no instance found **\n")
 
     if __name__ == '__main__':
         unittest.main()

@@ -15,8 +15,7 @@ def hello_hbnb():
 
     Displays 'Hello HBNB!' when acessing root URL.
     """
-
-   return 'Hello HBNB!'
+    return 'Hello HBNB!'
 
 @app.route('/hbnb', strict_slashes=False)
 def display_hbnb():
@@ -24,6 +23,7 @@ def display_hbnb():
     Displays 'HBNB' when acessing /hbnb URL.
     """
     return 'HBNB'
+
 @app.route('/c/<text>', strict_slashes=False)
 def display_c(text):
     """

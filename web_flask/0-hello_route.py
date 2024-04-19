@@ -1,6 +1,6 @@
 #!/user/bin/python3
 """
-Initiates a Flask-based web application.
+Code to launch a Flask-based wep application.
 """
 
 from flask import Flask
@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def index():
+def hello_world():
     '''The main page.'''
     return 'Hello HBNB!'
 

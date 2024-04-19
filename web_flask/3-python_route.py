@@ -12,6 +12,7 @@ app = Flask(__name__)
 def hello_hbnb():
 
     """
+
     Displays 'Hello HBNB!' when acessing root URL.
     """
 
@@ -23,7 +24,6 @@ def display_hbnb():
     Displays 'HBNB' when acessing /hbnb URL.
     """
     return 'HBNB'
-
 @app.route('/c/<text>', strict_slashes=False)
 def display_c(text):
     """

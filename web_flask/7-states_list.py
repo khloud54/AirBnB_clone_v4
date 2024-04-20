@@ -5,8 +5,7 @@ Initiates a Flask-based web application.
 import sys
 sys.path.append("/path/to/parent/directory")
 from flask import Flask, render_template
-from ..models import storage
-from models.state import State
+from models import storage
 
 app = Flask(__name__)
 

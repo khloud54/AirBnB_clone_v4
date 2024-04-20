@@ -23,7 +23,7 @@ def c_text(text):
     """Show "C" along with the value stored in the text variable"""
     return 'C {}'.format(text.replace('_', ' '))
 
-@app.route('/python', defaults={'text': 'is cool'}, strict_slahses=False)
+@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
 def python_text(text):
     """Show "python" and then the value stored in the text variable"""
@@ -40,4 +40,4 @@ def number_templates(n):
     return render_template('5-number.html', n=n)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port'5000')
+    app.run(host='0.0.0.0', port=5000)

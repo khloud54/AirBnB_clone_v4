@@ -15,7 +15,7 @@ def states_list():
 x.name)
     return render_template('7-states_list.html', states=states)
 
-@app.teardown appcontext
+@app.teardown (appcontext)
 def teardown db(exception):
     """closes the storage on teardown"""
     storage.close()

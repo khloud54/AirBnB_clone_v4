@@ -5,23 +5,22 @@ Initiates a Flask-based web application.
 
 from flask import Flask, render_template
 from models import storage
-from models import *
+from models.statecimport State
 
 app = Flask(__name__)
 
+@app.teardown_appcontext
+def teardown(exception):
+    """ Eliminates the current SQLAlchemy session."""
+    storage.close()
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """Present an HTML page with states arranged in alphabetical sequence"""
-    states = sorted(list(storage.all("State").calues()), key=lambda x: x.name)
-    return render_template('7-states_list.html', states=states)
-
-
-@app.teardown_appcontext
-def teardown_db(exception):
-    """Shuts down the storage during teardown."""
-    storage.close()
-
+    """Display a HTML page with a list of all state objects
+    present in DBStorage."""
+    states = storage.all(state).values()
+    sorted_states = sorted(states, key=lambda state: state.name)
+    return render_template('7-states_list.html', states=sorted.states)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5000')

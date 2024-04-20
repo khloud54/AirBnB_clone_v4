@@ -66,4 +66,12 @@ class FilelStorage():
             self.__objects = {}
             for key in objects:
                 name = key.split(".")[0]
-                self.__objects[key] = my_dict[name](**objects[key])
+
+self.__objects[key] = my_dict[name](**objects[key])
+
+class FileStorage:
+    def close(self):
+        """
+        Calls reload() method for deserializing the JSON file to objects.
+        """
+        self.reload()

@@ -53,7 +53,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         ''' instantiates a new BaseModel, save it, and print its ID '''
-        if args =="":
+        if args == "":
             print("** class name missing **")
             return
         arg = shlex.split(args)

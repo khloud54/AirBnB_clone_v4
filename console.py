@@ -252,7 +252,8 @@ class HBNBCommand(cmd.Cmd):
             line = ""
         line = class_name + line
         if (command in cmd_dict.keys()):
-            cmd_dict[command](line.strip())
+            cmd_dict[command](line.strip()
+
 
 if __name__ == '__main__':
 

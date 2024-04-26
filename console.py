@@ -255,5 +255,6 @@ class HBNBCommand(cmd.Cmd):
             cmd_dict[command](line.strip())
 
 if __name__ == '__main__':
-    HBNBCommand().cmdloop()
 
+
+    HBNBCommand().cmdloop()

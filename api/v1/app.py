@@ -5,6 +5,7 @@ Flask server (variable app)
 """
 
 from flask impoer Flask, jsonify
+from werkzeug.exceptions import NotFound
 from models import storage
 from os import getenv
 from api.v1.views import app_views
@@ -21,12 +22,10 @@ def downtear(self):
 
 
 @app.errorhandler(404)
-def page_not_found(error):
-    '''return render_template'''
-    return jsonify('error'='Not found'), 404
+def not_found_error(404):
+    return jsonify({"error": "Not found"}), 404
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     host = getenv('HBNB_API_HOST')
     port = getenv('HBNB_API_PORT')
     if not host:

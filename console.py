@@ -135,7 +135,7 @@ class HBNBCommand(cmd.Cmd):
         email "airbnb@holbertonschool.com". '''
 
         if not args:
-            print ("** class name missing **")
+            print("** class name missing **")
             return
         arg = shlex.split(args)
         storage.reload()
@@ -243,7 +243,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             inputs = val[1].split("(")[1].split(",")
             for num in range(len(inputs)):
-                if (num != len(inputs) -1):
+                if (num != len(inputs) - 1):
                     line = line + " " + shlex.split(inputs[num])[0]
                 else:
                     line = line + " " + shlex.split(inputs[num][0:-1])[0]
